@@ -3,7 +3,6 @@ import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { Alert } from 'react-native';
 
 import api from '~/services/api';
-import history from '~/services/history';
 
 import { signInSuccess, signUpSuccess, signFailure } from './actions';
 
@@ -22,7 +21,7 @@ export function* signIn({ payload }) {
 
     api.defaults.headers.Authorization = `Bearer ${token}`;
 
-    history.push('/dashboard');
+    // history.push('/dashboard');
 
     Alert.alert('Successo', 'Autenticado com sucesso.');
   } catch (err) {
@@ -47,7 +46,7 @@ function* signUp({ payload }) {
 
     yield put(signUpSuccess());
 
-    history.push('/');
+    // history.push('/');
 
     Alert.alert('Conta criada com sucesso', 'Informe seus dados para login.');
   } catch (err) {
