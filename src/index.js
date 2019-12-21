@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, StatusBar } from 'react-native';
 
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -15,6 +15,7 @@ export default function Index() {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <DevMenu>
+          <StatusBar barStyle="light-content" backgroundColor="#22202C" />
           <View />
         </DevMenu>
       </PersistGate>
