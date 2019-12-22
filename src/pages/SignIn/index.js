@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Image } from 'react-native';
 
 import { useNavigation } from 'react-navigation-hooks';
@@ -19,6 +19,13 @@ import {
 export default function SignIn() {
   const navigation = useNavigation();
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const passwordRef = useRef();
+
+  function handleSubmit() {}
+
   return (
     <Background>
       <Container>
@@ -30,7 +37,10 @@ export default function SignIn() {
             autoCorrect={false}
             autoCapitalize="none"
             placeholder="Digite seu e-mail"
-            returnKeyType="none"
+            returnKeyType="next"
+            onSubmitEditing={() => passwordRef.current.focus()}
+            value={email}
+            onChangeText={setEmail}
           />
 
           <FormInput
@@ -38,8 +48,12 @@ export default function SignIn() {
             autoCapitalize="none"
             placeholder="Sua senha secreta"
             returnKeyType="send"
+            ref={passwordRef}
+            onSubmitEditing={handleSubmit}
+            value={password}
+            onChangeText={setPassword}
           />
-          <SubmitButton>Entrar</SubmitButton>
+          <SubmitButton onPress={handleSubmit}>Entrar</SubmitButton>
         </Form>
 
         <SignLink onPress={() => navigation.navigate('SignUp')}>
