@@ -2,6 +2,9 @@ import React, { useState, useRef } from 'react';
 import { Image } from 'react-native';
 
 import { useNavigation } from 'react-navigation-hooks';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { signInRequest } from '~/store/modules/auth/actions';
 
 import Background from '~/components/Background';
 
@@ -18,13 +21,20 @@ import {
 
 export default function SignIn() {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const loading = useSelector(state => state.auth.loading);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const passwordRef = useRef();
 
-  function handleSubmit() {}
+  function handleSubmit() {
+    dispatch(signInRequest(email, password));
+
+    setPassword('');
+  }
 
   return (
     <Background>
@@ -44,8 +54,7 @@ export default function SignIn() {
           />
 
           <FormInput
-            autoCorrect={false}
-            autoCapitalize="none"
+            secureTextEntry
             placeholder="Sua senha secreta"
             returnKeyType="send"
             ref={passwordRef}
@@ -53,7 +62,9 @@ export default function SignIn() {
             value={password}
             onChangeText={setPassword}
           />
-          <SubmitButton onPress={handleSubmit}>Entrar</SubmitButton>
+          <SubmitButton loading={loading} onPress={handleSubmit}>
+            Entrar
+          </SubmitButton>
         </Form>
 
         <SignLink onPress={() => navigation.navigate('SignUp')}>
