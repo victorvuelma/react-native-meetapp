@@ -19,8 +19,6 @@ export default function Subscriptions() {
   const [subscriptions, setSubscriptions] = useState([]);
 
   async function loadSubscriptions() {
-    console.tron.log('load');
-
     setLoading(true);
 
     const response = await api.get('subscriptions');
