@@ -21,6 +21,7 @@ module.exports = {
     camelcase: 'off',
     'no-console': ['warn', { allow: ['tron'] }],
     'no-param-reassign': 'off',
+    'no-nested-ternary': 'off',
     'import/prefer-default-export': 'off',
     'react/jsx-filename-extension': ['error', { extensions: ['.js', '.jsx'] }],
     'react/jsx-props-no-spreading': 'off',

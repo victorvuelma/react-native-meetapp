@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import { ActivityIndicator } from 'react-native';
 
 import { parseISO, format, addDays, subDays } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
@@ -10,7 +11,14 @@ import api from '~/services/api';
 import Background from '~/components/Background';
 import Meetup from '~/components/Meetup';
 
-import { MeetupList, DateSelector, DateChange, DateText } from './styles';
+import {
+  MeetupList,
+  DateSelector,
+  DateChange,
+  DateText,
+  Info,
+  InfoText,
+} from './styles';
 
 export default function Dashboard() {
   const [date, setDate] = useState(new Date());
@@ -80,20 +88,31 @@ export default function Dashboard() {
           <Icon name="keyboard-arrow-right" size={36} color="#fff" />
         </DateChange>
       </DateSelector>
-      <MeetupList
-        data={meetups}
-        keyExtractor={item => String(item.id)}
-        renderItem={({ item }) => (
-          <Meetup
-            meetup={item}
-            disabled={item.disabled}
-            action={{
-              name: 'Realizar inscrição',
-              call: async () => subscribe(item),
-            }}
-          />
-        )}
-      />
+      {loading ? (
+        <Info>
+          <ActivityIndicator color="#fff" size="large" />
+        </Info>
+      ) : meetups.length ? (
+        <MeetupList
+          data={meetups}
+          keyExtractor={item => String(item.id)}
+          renderItem={({ item }) => (
+            <Meetup
+              meetup={item}
+              disabled={item.disabled}
+              action={{
+                name: 'Realizar inscrição',
+                call: async () => subscribe(item),
+              }}
+            />
+          )}
+        />
+      ) : (
+        <Info>
+          <Icon name="clear" color="#fff" size={60} />
+          <InfoText>Nenhum meetup encontrado.</InfoText>
+        </Info>
+      )}
     </Background>
   );
 }
