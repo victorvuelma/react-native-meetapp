@@ -22,7 +22,7 @@ import {
 
 export default function Dashboard() {
   const [date, setDate] = useState(new Date());
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [meetups, setMeetups] = useState([]);
 
   const dateFormatted = useMemo(
@@ -42,7 +42,6 @@ export default function Dashboard() {
           date: format(date, 'yyyy-MM-dd'),
         },
       });
-      console.tron.log(format(date, 'yyyy-MM-dd'));
 
       const data = response.data.map(meetup => ({
         ...meetup,

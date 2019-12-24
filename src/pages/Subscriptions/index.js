@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ActivityIndicator } from 'react-native';
 
 import { parseISO, format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
@@ -10,12 +11,15 @@ import api from '~/services/api';
 import Background from '~/components/Background';
 import Meetup from '~/components/Meetup';
 
-import { MeetupList } from './styles';
+import { MeetupList, Info, InfoText } from './styles';
 
 export default function Subscriptions() {
+  const [loading, setLoading] = useState(true);
   const [subscriptions, setSubscriptions] = useState([]);
 
   async function loadSubscriptions() {
+    setLoading(true);
+
     const response = await api.get('subscriptions');
 
     const data = response.data.map(sub => ({
@@ -33,6 +37,7 @@ export default function Subscriptions() {
     }));
 
     setSubscriptions(data);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -54,20 +59,31 @@ export default function Subscriptions() {
 
   return (
     <Background>
-      <MeetupList
-        data={subscriptions}
-        keyExtractor={item => String(item.id)}
-        renderItem={({ item }) => (
-          <Meetup
-            meetup={item.meetup}
-            disabled={item.disabled}
-            action={{
-              name: 'Cancelar inscrição',
-              call: () => cancelSubscription(item.meetup),
-            }}
-          />
-        )}
-      />
+      {loading ? (
+        <Info>
+          <ActivityIndicator color="#fff" size="large" />
+        </Info>
+      ) : subscriptions.length ? (
+        <MeetupList
+          data={subscriptions}
+          keyExtractor={item => String(item.id)}
+          renderItem={({ item }) => (
+            <Meetup
+              meetup={item.meetup}
+              disabled={item.disabled}
+              action={{
+                name: 'Cancelar inscrição',
+                call: () => cancelSubscription(item.meetup),
+              }}
+            />
+          )}
+        />
+      ) : (
+        <Info>
+          <Icon name="clear" color="#fff" size={60} />
+          <InfoText>Nenhuma inscrição encontrada.</InfoText>
+        </Info>
+      )}
     </Background>
   );
 }
