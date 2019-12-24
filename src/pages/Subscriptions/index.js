@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ActivityIndicator } from 'react-native';
 
+import { useFocusEffect } from 'react-navigation-hooks';
 import { parseISO, format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 
@@ -18,6 +19,8 @@ export default function Subscriptions() {
   const [subscriptions, setSubscriptions] = useState([]);
 
   async function loadSubscriptions() {
+    console.tron.log('load');
+
     setLoading(true);
 
     const response = await api.get('subscriptions');
@@ -43,6 +46,12 @@ export default function Subscriptions() {
   useEffect(() => {
     loadSubscriptions();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadSubscriptions();
+    }, []),
+  );
 
   async function cancelSubscription(meetup) {
     await api.delete(`meetups/${meetup.id}/subscription`);
