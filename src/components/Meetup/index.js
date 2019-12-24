@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -14,7 +14,17 @@ import {
   ActionButton,
 } from './styles';
 
-export default function Meetup({ meetup, loading, action, disabled }) {
+export default function Meetup({ meetup, action, disabled }) {
+  const [loading, setLoading] = useState(false);
+  async function callAction() {
+    if (!disabled) {
+      await setLoading(true);
+      await action.call();
+
+      await setLoading(false);
+    }
+  }
+
   return (
     <Container>
       <Image source={{ uri: meetup.image.url }} />
@@ -36,7 +46,11 @@ export default function Meetup({ meetup, loading, action, disabled }) {
           </DetailsItem>
         </DetailsList>
 
-        <ActionButton loading={loading} onPress={action.call}>
+        <ActionButton
+          loading={loading}
+          disabled={disabled}
+          onPress={callAction}
+        >
           {action.name}
         </ActionButton>
       </Info>
@@ -45,7 +59,6 @@ export default function Meetup({ meetup, loading, action, disabled }) {
 }
 
 Meetup.propTypes = {
-  loading: PropTypes.bool,
   meetup: PropTypes.shape({
     title: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
@@ -65,7 +78,6 @@ Meetup.propTypes = {
 };
 
 Meetup.defaultProps = {
-  loading: false,
   action: {
     call: () => {},
   },
